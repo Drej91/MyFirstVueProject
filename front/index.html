@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Mobile Shop</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,300,300i,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css" type="text/css">
+</head>
+<body>
+    <div id="app">
+        <!--pocetna stranica-->
+        <div v-if="trenStranica == 'login'">
+            <div v-if="!loggedInUser">
+                <div class="first-page">
+                    <h1 class="welcome-msg">MOBILE SHOP</h1><br>
+                    <p class="msg-two">Please log in to get started!</p>
+                    <p class="msg-thr">If you don't have an account, please register!</p>
+                    <div class="login-box">
+                        <h1>Login</h1>
+                        <div class="textbox">
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                            <input v-model="ime" type="text" placeholder="username"><br>
+                        </div>
+                        <div class="textbox">
+                            <i class="fa fa-lock" aria-hidden="true"></i>
+                            <input type="password" v-model="lozinka" placeholder="password"><br>
+                        </div>
+                        <button @click="pokusajLogin()" class="btn">Log in</button><br>
+                        <button @click="trenStranica = 'register'" class="btn">Register</button><br>
+                        <p class="first-page-msg">{{msg}}</p>
+                    </div>
+                </div>
+            </div>
+
+        <!-- stranica za ulogovane, sadrzaj sajta koji mogu samo oni da vide -->
+            <div v-if="loggedInUser">
+                <div class="logged-in-page">
+                    <button @click="logOut()" class="btn">Log out</button>
+
+                    <div class="artikli"> <!--prikaz artikala iz baze-->
+                        <button @click="prikaziArtikle()" class="btn">Prikazi artikle</button>
+                        <ul>
+                            <li v-for="artikal in artikli" class="artikli-text">
+                                <span>{{artikal.art_naziv}}</span>
+                                <span>{{artikal.mark_ime}}</span>
+                                <span>{{artikal.mod_naziv}}</span>
+                                <span>{{artikal.mod_cena}}</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <br>
+                    <br>
+                    <div class="comments"> 
+                        <!-- slanje komentara-->
+                        <div class="text-box-2">
+                            <input v-model="komentar" placeholder="Ostavite komentar">
+                
+                        </div>
+                        <button @click="posaljiKomentar()" class="btn">Ostavite komentar</button>
+                        
+                        
+                    </div>
+
+                    <div class="prikazani-komentari"> <!-- prikaz komentara -->
+                        <button @click="prikaziUtiske()" class="btn">Prikazi komentare</button>
+                        <ul>
+                            <li v-for='(komentator, index) in komentatori' class="artikli-text">{{ komentator.usr_id }}</li>
+                            <li v-for='(utisak, index) in utisci' class="artikli-text">{{utisak.kom_text}} <button v-if="level==1" @click="obrisiKom(index, utisak.kom_id)" class="btn">Obriši</button></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- stranica za registraciju -->
+        <div v-if="trenStranica == 'register'">
+            <div class="register-page">
+                <h1 class="welcome-msg">MOBILE SHOP</h1><br>
+                <div class="register-box">
+                    <h1>Register</h1>
+                    <div class="text-box">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                        <input v-model="noviUser.username" placeholder="username">
+                    </div>
+                    <div class="text-box">
+                        <i class="fa fa-lock" aria-hidden="true"></i>
+                        <input v-model="noviUser.password" placeholder="password">
+                    </div>
+                    <button @click="registruj()" class="btn">Register</button><br>
+                    <p class="register-msg">{{msg}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
